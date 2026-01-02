@@ -20,7 +20,10 @@ export default function TaskForm({ refresh }) {
 
   const submit = async () => {
     try {
-      await axios.post("http://localhost:5000/api/tasks", task);
+      await axios.post(
+        "https://task-tracker-backend-flax.vercel.app/tasks",
+        task
+      );
       setTask({ title: "", description: "", priority: "Low", dueDate: null });
       refresh();
     } catch (error) {
@@ -31,20 +34,19 @@ export default function TaskForm({ refresh }) {
 
   return (
     <div className="task-form">
-<Typography
-  variant="h6"
-  fontWeight={600}
-  fontFamily="Fredoka One, cursive"
-  fontSize="1.25rem"
-  color="#51f63bff"
-  sx={{
-    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.1)",
-    marginBottom: "1rem",
-  }}
->
-  Add New Task
-</Typography>
-
+      <Typography
+        variant="h6"
+        fontWeight={600}
+        fontFamily="Fredoka One, cursive"
+        fontSize="1.25rem"
+        color="#51f63bff"
+        sx={{
+          textShadow: "2px 2px 4px rgba(0, 0, 0, 0.1)",
+          marginBottom: "1rem",
+        }}
+      >
+        Add New Task
+      </Typography>
 
       <TextField
         fullWidth
