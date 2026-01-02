@@ -10,6 +10,7 @@ export default function TaskList({ tasks, refresh }) {
     status: "All",
     priority: "All",
   });
+
   const funnyMessages = [
     "Zero tasks… are you secretly a robot? ",
     "Wow… nothing to do. Are you a productivity or just lazy?",
@@ -24,17 +25,16 @@ export default function TaskList({ tasks, refresh }) {
     "No tasks… maybe you’re leveling up on LeetCode",
   ];
 
-  <p style={{ textAlign: "center", marginTop: "1rem", fontStyle: "italic" }}>
-    {funnyMessages[Math.floor(Math.random() * funnyMessages.length)]}
-  </p>;
-
   const [sortAsc, setSortAsc] = useState(true);
 
   const toggleStatus = async (task) => {
     try {
-      await axios.put(`http://localhost:5000/api/tasks/${task._id}`, {
-        status: task.status === "Pending" ? "Completed" : "Pending",
-      });
+      await axios.put(
+        `https://task-tracker-backend-flax.vercel.app/tasks/${task._id}`,
+        {
+          status: task.status === "Pending" ? "Completed" : "Pending",
+        }
+      );
       refresh();
     } catch {
       alert("Failed to update task");
@@ -43,7 +43,9 @@ export default function TaskList({ tasks, refresh }) {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+      await axios.delete(
+        `https://task-tracker-backend-flax.vercel.app/tasks/${id}`
+      );
       refresh();
     } catch (error) {
       console.error(error);
@@ -75,9 +77,12 @@ export default function TaskList({ tasks, refresh }) {
     return filtered;
   }, [tasks, filter, sortAsc]);
 
+  // ✅ ADDED (bug fix)
+  const hasAnyTasks = tasks.length > 0;
+  const hasFilteredTasks = filteredTasks.length > 0;
+
   return (
     <div className="task-list-wrapper">
-      {/* Only show filter if there are tasks */}
       {tasks.length > 0 && (
         <div className="task-filter">
           <FormControl size="small" sx={{ minWidth: 140 }}>
@@ -115,7 +120,7 @@ export default function TaskList({ tasks, refresh }) {
         </div>
       )}
 
-      {filteredTasks.length > 0 ? (
+      {hasFilteredTasks ? (
         filteredTasks.map((task) => (
           <div key={task._id} className="task-card">
             <div className="task-info">
@@ -168,6 +173,17 @@ export default function TaskList({ tasks, refresh }) {
             </div>
           </div>
         ))
+      ) : hasAnyTasks ? (
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "1rem",
+            color: "#888",
+            fontSize: "1.2rem",
+          }}
+        >
+          No tasks match the selected filters
+        </p>
       ) : (
         <p
           style={{
