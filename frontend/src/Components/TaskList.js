@@ -77,7 +77,6 @@ export default function TaskList({ tasks, refresh }) {
     return filtered;
   }, [tasks, filter, sortAsc]);
 
-  // ✅ ADDED (bug fix)
   const hasAnyTasks = tasks.length > 0;
   const hasFilteredTasks = filteredTasks.length > 0;
 
